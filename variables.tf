@@ -46,5 +46,6 @@ variable "ecs_task_name" {
 
 variable "is_stream" {
   description = "true or false to decide if the ecs task going to be a streaming process or batch process"
+  default     = "false"
 }
 

@@ -1,31 +1,31 @@
 provider "aws" {
-  region = "${var.region}"
+  region = var.region
 }
 
 data "aws_s3_bucket" "selected" {
-  bucket = "${var.s3_bucket_name}"
+  bucket = var.s3_bucket_name
 }
 
 data "aws_ecs_task_definition" "etl" {
-  task_definition = "${var.ecs_task_name}"
+  task_definition = var.ecs_task_name
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  filename         = "${var.lambda_source_package}"
+  filename         = var.lambda_source_package
   function_name    = "tf-${var.app_name}"
   role             = aws_iam_role.lambda_role.arn
-  handler          = "${var.lambda_handler}"
-  source_code_hash = "${filebase64sha256(var.lambda_source_package)}"
-  runtime          = "${var.lambda_runtime}"
-  timeout          = "${var.lambda_timeout}"
+  handler          = var.lambda_handler
+  source_code_hash = filebase64sha256(var.lambda_source_package)
+  runtime          = var.lambda_runtime
+  timeout          = var.lambda_timeout
 
   environment {
     variables = {
-      region                  = "${var.region}"
+      region                  = var.region
       s3_key_suffix_whitelist = "[\"${var.filtersuffix}\"]"
-      IS_STREAM               = "${var.is_stream}"
-      CLUSTER_NAME            = "${var.ecs_cluster_name}"
-      TASK_ID                 = "${var.ecs_task_name}:data.aws_ecs_task_definition.etl.aws_ecs_task_definition.revision"
+      IS_STREAM               = var.is_stream
+      CLUSTER_NAME            = var.ecs_cluster_name
+      TASK_ID                 = "${var.ecs_task_name}:${data.aws_ecs_task_definition.etl.revision}"
 
     }
   }
@@ -45,7 +45,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.lambda_function.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "${var.filterprefix}"
-    filter_suffix       = "${var.filtersuffix}"
+    filter_prefix       = var.filterprefix
+    filter_suffix       = var.filtersuffix
   }
 }

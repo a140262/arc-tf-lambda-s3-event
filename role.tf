@@ -43,6 +43,7 @@ data "aws_iam_policy_document" "ecs" {
   }
 }
 
+
 # ------------------------------------------------------------------------------------------------
 # Create Roles
 # ------------------------------------------------------------------------------------------------
@@ -50,6 +51,10 @@ data "aws_iam_policy_document" "ecs" {
 resource "aws_iam_role" "lambda_role" {
   name               = "${var.app_name}-lambda_role"
   assume_role_policy = data.aws_iam_policy_document.lambda.json
+
+  tags = {
+    Name = "arcdemo-lambda-role"
+  }
 }
 
 # ------------------------------------------------------------------------------------------------
@@ -87,14 +92,13 @@ EOF
 # ------------------------------------------------------------------------------------------------
 # Attach Policies to Role
 # ------------------------------------------------------------------------------------------------
-# resource "aws_iam_role_policy_attachment" "ecs_pol" {
-#   name = "${var.app_name}-ecs"
-#   role = aws_iam_role.lambda_role.name
-#   policy_arn = data.aws_iam_policy_document.ecs.json
-# }
+resource "aws_iam_role_policy" "ecs_lambda" {
+  name   = "lambda_run_ecs"
+  role   = aws_iam_role.lambda_role.id
+  policy = data.aws_iam_policy_document.ecs.json
+}
 
-# resource "aws_iam_role_policy_attachment" "lambdalog_pol" {
-#   name = "${var.app_name}-lambdalog"
-#   role = aws_iam_role.lambda_role.name
-#   policy_arn = aws_iam_policy.lambda_logging.arn
-# }
+resource "aws_iam_role_policy_attachment" "lambdalog_pol" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_logging.arn
+}

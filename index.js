@@ -28,6 +28,7 @@ exports.handler = function (event, context, callback) {
 
     var config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
     console.log('Config: ' + JSON.stringify(config));
+
     
     var bucket = event.Records[0].s3.bucket.name;
     var key=decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));  
@@ -46,7 +47,7 @@ function launchEcsTask (etl_config_uri,config) {
     console.log('Deploying an ARC Job as ECS task')
     
     var job_name = path.basename(etl_config_uri).replace(/.json/g,'')
-    var is_stream = !etl_config_uri.toLowerCase().includes('batch')
+    var is_stream = etl_config_uri.toLowerCase().includes('stream')
     var params = {
         cluster: process.env.CLUSTER_NAME,
         taskDefinition: process.env.TASK_ID,
@@ -76,7 +77,7 @@ function launchEcsTask (etl_config_uri,config) {
                     value: job_name
                   }
                 ],
-                name: job_name
+                name: config.CONTAINER_NAME
               }
             ]
           }
