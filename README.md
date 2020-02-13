@@ -5,40 +5,32 @@
 
 Terraform lambda module to run an ECS task that triggered by a S3 event.
 
-This module in main.tf file with the necessary parameters.
+This module in main.tf file contains the necessary parameters:
 
 
 ## Variables
 
-**app_name**: (String) the name of the application naming the resources
-
 **region** (String) The region where you want to deploy the application
-
-**lambda_runtime** (String) Lambda function run environment base
-
-**lambda_memory_size** (String) Lambda function allocated memory size
-
-**filtersuffix** (String) Lambda function invoke suffix for S3 Objecy Create or put
 
 **filterprefix** (String) Lambda function invoke prefix for S3 Objecy Create or put
 
-**lambda_timeout** (String) Lambda function timeout configuration
-
-**lambda_handler** (String) Lambda function handler name
+**filtersuffix** (String) A file extension name as a Lambda function invoke suffix
 
 **lambda_source_package** (String) Lambda function source file name with location
 
-**s3_bucket_name**: S3 bucket name where you want to create notification event
+**s3_bucket_name** (String) S3 bucket name where you want to create notification event
+
+**ecs_cluster_name** (String) ECS cluster name that hosts the ARC ETL task
+
+**ecs_task_name** (String) An ECS task definition name
+
+**ecs_container_name** (String) Container name in an ECS task
 
 
 ## Outputs
 
-**lambda_function_arn**: The ARN for the created Amazon Lambda Function
+**lambda_function_name**: Lambda Function name
 
-**lambda_function_name**: The Name for the created Amazon Lambda Function
-
-**role_name**: name for a IAM role created withing lambda Function access
-
-**role_arn**: ARN for a IAM role created withing lambda Function access
+**lambda_role_name**: The name of an IAM role created for the Lambda Function access
 
 
