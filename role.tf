@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "ecs" {
 # ------------------------------------------------------------------------------------------------
 
 resource "aws_iam_role" "lambda_role" {
-  name               = "${var.app_name}-lambda_role"
+  name               = "s3-ecs-task-lambda_role"
   assume_role_policy = data.aws_iam_policy_document.lambda.json
 
   tags = {

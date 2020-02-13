@@ -28,13 +28,14 @@ data "aws_subnet_ids" "selected" {
 
 
 resource "aws_lambda_function" "lambda_function" {
-  filename         = var.lambda_source_package
-  function_name    = "tf-${var.app_name}"
+  function_name    = "tf-s3-ecs-task"
+  handler          = "index.handler"
+  runtime          = "nodejs10.x"
   role             = aws_iam_role.lambda_role.arn
-  handler          = var.lambda_handler
+  filename         = var.lambda_source_package
   source_code_hash = filebase64sha256(var.lambda_source_package)
-  runtime          = var.lambda_runtime
-  timeout          = var.lambda_timeout
+
+  timeout = 60
   vpc_config {
     subnet_ids         = data.aws_subnet_ids.selected.ids
     security_group_ids = [data.aws_security_group.selected.id]

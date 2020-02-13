@@ -3,28 +3,12 @@ variable "region" {
   default     = "ap-southeast-2"
 }
 
-variable "app_name" {
-  default = "s3-ecs-task"
-}
-
-variable "lambda_runtime" {
-  default = "nodejs10.x"
-}
-
-variable "filtersuffix" {
-  default = ".ipynb"
-}
-
 variable "filterprefix" {
   default = "arcjupyter/job"
 }
 
-variable "lambda_timeout" {
-  default = "60"
-}
-
-variable "lambda_handler" {
-  default = "index.handler"
+variable "filtersuffix" {
+  default = ".ipynb"
 }
 
 variable "lambda_source_package" {
@@ -49,7 +33,7 @@ variable "ecs_container_name" {
 }
 
 variable "is_stream" {
-  description = "true or false to decide if the ecs task going to be a streaming process or batch process"
+  description = "true or false to determin if the ECS task going to be a streaming process or batch process"
   default     = "false"
 }
 
