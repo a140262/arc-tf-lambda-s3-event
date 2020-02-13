@@ -1,6 +1,0 @@
-{
-    "SUBNET_ID": "subnet-04ba44dc8adb36cac",
-    "APP_COUJNT": 1,
-    "ECS_TASK_SG": "sg-0a6f9469e5166ab4b",
-    "CONTAINER_NAME": "arc-etl"
-}

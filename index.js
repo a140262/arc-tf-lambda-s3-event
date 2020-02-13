@@ -26,9 +26,6 @@ exports.handler = function (event, context, callback) {
     console.log("REQUEST: " + JSON.stringify(event));
     console.log("====================");
 
-    var config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
-    console.log('Config: ' + JSON.stringify(config));
-
     
     var bucket = event.Records[0].s3.bucket.name;
     var key=decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));  
@@ -38,26 +35,26 @@ exports.handler = function (event, context, callback) {
         context.fail('Suffix for key: ' + key + ' is not in the whitelist')
     }
     
-    launchEcsTask(uri,config);
+    launchEcsTask(uri);
 
 };
 
-function launchEcsTask (etl_config_uri,config) {
+function launchEcsTask (etl_config_uri) {
 
     console.log('Deploying an ARC Job as ECS task')
     
-    var job_name = path.basename(etl_config_uri).replace(/.json/g,'')
-    var is_stream = etl_config_uri.toLowerCase().includes('stream')
+    var job_name = path.basename(etl_config_uri).split(".")[0]
+    var is_stream = etl_config_uri.toLowerCase().includes("stream")
     var params = {
         cluster: process.env.CLUSTER_NAME,
         taskDefinition: process.env.TASK_ID,
-        count: config.APP_COUJNT,
+        count: 1,
         launchType: "FARGATE",
         networkConfiguration: {
             awsvpcConfiguration: {
-                subnets: [config.SUBNET_ID],
+                subnets: process.env.subnet_ids.split(","),
                 assignPublicIp: "DISABLED",
-                securityGroups: [config.ECS_TASK_SG]
+                securityGroups: process.env.etl_task_sg_id.split(",")
             }
         },
           overrides: {
@@ -77,7 +74,7 @@ function launchEcsTask (etl_config_uri,config) {
                     value: job_name
                   }
                 ],
-                name: config.CONTAINER_NAME
+                name: process.env.container_name
               }
             ]
           }

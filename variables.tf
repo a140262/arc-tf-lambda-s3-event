@@ -12,11 +12,11 @@ variable "lambda_runtime" {
 }
 
 variable "filtersuffix" {
-  default = ".json"
+  default = ".ipynb"
 }
 
 variable "filterprefix" {
-  default = "arcjupyter/job/"
+  default = "arcjupyter/job"
 }
 
 variable "lambda_timeout" {
@@ -42,6 +42,10 @@ variable "ecs_cluster_name" {
 
 variable "ecs_task_name" {
   default = "arc-etl-task"
+}
+
+variable "ecs_container_name" {
+  default = "arc-etl"
 }
 
 variable "is_stream" {
