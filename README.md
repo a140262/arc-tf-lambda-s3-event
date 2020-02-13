@@ -3,7 +3,18 @@
 
 ## Overview
 
-Terraform lambda module to run an ECS task that triggered by a S3 event.
+A terraform lambda module to run an ECS Task that triggered by a S3 event. Our batch ETL processes don't need long-running containers, instead terminate the task, as soon as the job is completed.
+
+<details><summary>Amazon ECS Task vs Amazon ECS Service</summary>
+<p>
+
+```
+> Amazon ECS Task is a running container with the docker run info defined in a Task Definition. 
+> Amazon ECS Service represents a set of long running ECS Tasks of the same Task Definition.
+```
+
+</p>
+</details>
 
 This module in main.tf file contains the necessary parameters:
 
