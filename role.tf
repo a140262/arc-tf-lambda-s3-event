@@ -31,8 +31,10 @@ data "aws_iam_policy_document" "ecs" {
     }
   }
   statement {
-    actions   = ["iam:PassRole"]
-    resources = ["*"]
+    actions = ["iam:PassRole"]
+    resources = [
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/*"
+    ]
     condition {
       test     = "StringLike"
       variable = "iam:PassedToService"
